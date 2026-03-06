@@ -38,10 +38,12 @@ export default function DesiredWeightPage() {
     getQuizServerSnapshot
   );
   const [desiredWeight, setDesiredWeightInput] = useState("");
+  const hasCurrentWeight = typeof currentWeightKg === "number";
+  const hasHeight = typeof heightCm === "number";
 
   const recommendedWeightKg = useMemo(() => {
-    if (!heightCm) {
-      return 70;
+    if (!hasCurrentWeight || !hasHeight) {
+      return null;
     }
 
     const heightM = heightCm / 100;
@@ -59,9 +61,9 @@ export default function DesiredWeightPage() {
     recommended = Math.max(recommended, roundedMid);
 
     return clamp(recommended, 40, 300);
-  }, [currentWeightKg, heightCm]);
+  }, [currentWeightKg, hasCurrentWeight, hasHeight, heightCm]);
 
-  if (!currentWeightKg || !heightCm) {
+  if (!hasCurrentWeight || !hasHeight) {
     return (
       <OnboardingShell
         activeStep={2}
@@ -76,11 +78,11 @@ export default function DesiredWeightPage() {
   }
 
   const parsedDesired = parseInteger(desiredWeight);
-  const maxAllowed = Math.floor(currentWeightKg - 1);
+  const maxAllowed = hasCurrentWeight ? Math.floor(currentWeightKg - 1) : null;
   const minAllowed = 40;
-  const isValid = parsedDesired !== null && parsedDesired >= minAllowed && parsedDesired <= maxAllowed;
+  const isValid = parsedDesired !== null && maxAllowed !== null && parsedDesired >= minAllowed && parsedDesired <= maxAllowed;
   const invalid = desiredWeight.length > 0 && !isValid;
-  const showTooHighError = parsedDesired !== null && parsedDesired >= currentWeightKg;
+  const showTooHighError = hasCurrentWeight && parsedDesired !== null && parsedDesired >= currentWeightKg;
 
   const handleContinue = () => {
     if (!isValid || parsedDesired === null) {
@@ -114,12 +116,16 @@ export default function DesiredWeightPage() {
         helperText={showTooHighError ? "Entered weight should be lower than your current weight." : undefined}
       />
 
-      <p className="small-text subtitle-text desired-weight-hint">
-        Recommended weight: {recommendedWeightKg} kg
-      </p>
-      <p className="small-text subtitle-text desired-weight-note">
-        A realistic first goal based on your height and current weight.
-      </p>
+      {recommendedWeightKg !== null ? (
+        <>
+          <p className="small-text subtitle-text desired-weight-hint">
+            Recommended weight: {recommendedWeightKg} kg
+          </p>
+          <p className="small-text subtitle-text desired-weight-note">
+            A realistic first goal based on your height and current weight.
+          </p>
+        </>
+      ) : null}
     </OnboardingShell>
   );
 }
