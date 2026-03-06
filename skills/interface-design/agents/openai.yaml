@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interface Design"
+  short_description: "Craft consistent product interfaces with intent"
+  default_prompt: "Use $interface-design to design dashboards and product interfaces with craft, consistency, and explicit anti-default checks."

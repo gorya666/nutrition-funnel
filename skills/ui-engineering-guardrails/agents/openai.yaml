@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Engineering Guardrails"
+  short_description: "Accessible, fast, delightful UI rules"
+  default_prompt: "Use $ui-engineering-guardrails to enforce concise MUST/SHOULD/NEVER UI decisions in this frontend task."
