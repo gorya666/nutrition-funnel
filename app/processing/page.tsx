@@ -1,19 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import CheckIcon from "@/components/CheckIcon";
 import OnboardingShell from "@/components/OnboardingShell";
 
 const STEPS = [
-  "Analyzing your body metrics",
-  "Calculating your calorie target",
-  "Estimating your weight timeline",
-  "Building your nutrition plan",
+  "Processing your responses",
+  "Analyzing goals",
+  "Defining nutrition requirement",
+  "Estimating weight progress",
 ] as const;
-
-const STEP_RANGES = [0.25, 0.5, 0.75, 1] as const;
 
 export default function ProcessingPage() {
   const router = useRouter();
@@ -21,7 +19,7 @@ export default function ProcessingPage() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const durationMs = 5200;
+    const durationMs = 4800;
     const start = performance.now();
     let frame = 0;
 
@@ -49,56 +47,52 @@ export default function ProcessingPage() {
 
     const timeoutId = window.setTimeout(() => {
       router.push("/results");
-    }, 450);
+    }, 250);
 
     return () => window.clearTimeout(timeoutId);
   }, [done, router]);
 
-  const currentStepIndex = useMemo(() => {
-    if (progress <= STEP_RANGES[0]) {
-      return 0;
-    }
-
-    if (progress <= STEP_RANGES[1]) {
-      return 1;
-    }
-
-    if (progress <= STEP_RANGES[2]) {
-      return 2;
-    }
-
-    return 3;
-  }, [progress]);
-
   const percent = Math.round(progress * 100);
+  const stepCount = STEPS.length;
+  const completedCount = done ? stepCount : Math.floor(progress * stepCount);
+  const activeIndex = done ? -1 : Math.min(completedCount, stepCount - 1);
 
   return (
-    <OnboardingShell activeStep={7} primaryAction={<div className="processing-footer-spacer" aria-hidden />}>
-      <h1 className="display-text processing-title">
-        We are crafting your <span className="title-highlight">nutrition experience…</span>
-      </h1>
+    <OnboardingShell activeStep={5} showBack onBack={() => router.back()}>
+      <h1 className="title-text processing-title">Personalizing your plan</h1>
 
-      <div className="processing-progress-head">
-        <p className="processing-step-label">{STEPS[currentStepIndex]}</p>
-        <p className="small-text subtitle-text processing-percent">{percent}%</p>
-      </div>
-
-      <div className="processing-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+      <div className="processing-track" role="progressbar" aria-label="Personalizing plan progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
         <span className="processing-fill" style={{ width: `${percent}%` }} />
       </div>
 
-      <div className="processing-steps" aria-live="polite">
+      <div className="processing-cards" aria-live="polite">
         {STEPS.map((step, index) => {
-          const completed = progress >= STEP_RANGES[index];
-          const active = !completed && index === currentStepIndex;
+          const completed = index < completedCount;
+          const active = index === activeIndex;
+          const cardClassName = completed
+            ? "processing-step-card processing-step-card-complete"
+            : active
+              ? "processing-step-card processing-step-card-active"
+              : "processing-step-card";
+          const textClassName = completed
+            ? "processing-step-card-text processing-step-card-text-complete"
+            : active
+              ? "processing-step-card-text processing-step-card-text-active"
+              : "processing-step-card-text";
+          const statusClassName = completed
+            ? "processing-status processing-status-complete"
+            : active
+              ? "processing-status processing-status-active"
+              : "processing-status processing-status-upcoming";
 
           return (
-            <div key={step} className="processing-step-row">
-              <p className={active ? "processing-step-text processing-step-text-active" : "processing-step-text"}>
-                {step}
-              </p>
-              <span className={completed ? "processing-step-badge processing-step-badge-complete" : "processing-step-badge"} aria-hidden="true">
-                {completed ? <CheckIcon size={16} strokeWidth={3} className="processing-step-icon" /> : null}
+            <div key={step} className={cardClassName}>
+              <p className={textClassName}>{step}</p>
+              <span className={statusClassName} aria-hidden="true">
+                <span className={active ? "processing-status-pulse processing-status-pulse-visible" : "processing-status-pulse"} />
+                <span className={completed ? "processing-status-check processing-status-check-visible" : "processing-status-check"}>
+                  <CheckIcon size={16} strokeWidth={3} className="processing-step-icon" />
+                </span>
               </span>
             </div>
           );

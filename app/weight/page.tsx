@@ -31,12 +31,15 @@ export default function WeightPage() {
 
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const validWeight = parseInRange(weight, 30, 250);
   const validHeight = parseInRange(height, 120, 220);
 
-  const weightInvalid = weight.length > 0 && validWeight === null;
-  const heightInvalid = height.length > 0 && validHeight === null;
+  const bothFilled = weight.length > 0 && height.length > 0;
+  const bmiReady = validWeight !== null && validHeight !== null;
+  const clearlyUnrealistic = bothFilled && !bmiReady;
+  const showSharedError = (submitted && bothFilled && !bmiReady) || clearlyUnrealistic;
 
   const bmi = useMemo(() => {
     if (validWeight === null || validHeight === null) {
@@ -50,7 +53,9 @@ export default function WeightPage() {
   }, [validHeight, validWeight]);
 
   const handleContinue = () => {
-    if (validWeight === null || validHeight === null) {
+    setSubmitted(true);
+
+    if (!bmiReady) {
       return;
     }
 
@@ -60,11 +65,11 @@ export default function WeightPage() {
 
   return (
     <OnboardingShell
-      activeStep={3}
+      activeStep={1}
       showBack
       onBack={() => router.back()}
       primaryAction={
-        <PrimaryButton disabled={validWeight === null || validHeight === null} onClick={handleContinue}>
+        <PrimaryButton disabled={!bothFilled} onClick={handleContinue}>
           Continue
         </PrimaryButton>
       }
@@ -77,8 +82,6 @@ export default function WeightPage() {
         unit="kg"
         value={weight}
         onChange={setWeight}
-        invalid={weightInvalid}
-        helperText={weightInvalid ? "Enter a value between 30 and 250" : undefined}
       />
 
       <WeightInputCard
@@ -86,11 +89,21 @@ export default function WeightPage() {
         unit="cm"
         value={height}
         onChange={setHeight}
-        invalid={heightInvalid}
-        helperText={heightInvalid ? "Enter a value between 120 and 220" : undefined}
       />
 
-      <div className="insight-slot">{bmi !== null ? <InsightBanner bmi={bmi} /> : null}</div>
+      {showSharedError ? (
+        <p className="small-text weight-shared-error">
+          Please enter a realistic weight and height to continue.
+        </p>
+      ) : null}
+
+      {bmi !== null ? (
+        <section className="weight-bmi-section">
+          <div className="insight-slot">
+            <InsightBanner bmi={bmi} />
+          </div>
+        </section>
+      ) : null}
     </OnboardingShell>
   );
 }

@@ -5,9 +5,9 @@ export type GenderKey = "male" | "female" | "prefer_not_to_say";
 type QuizState = {
   gender?: GenderKey;
   ageBucket?: AgeBucket;
-  currentWeightKg?: number;
-  heightCm?: number;
-  desiredWeightKg?: number;
+  currentWeightKg: number | null;
+  heightCm: number | null;
+  desiredWeightKg: number | null;
   targetWeightKg?: number;
   milestoneLossKg?: number;
   milestoneWeightKg?: number;
@@ -17,28 +17,32 @@ type QuizState = {
 };
 
 const QUIZ_STORAGE_KEY = "nutrition-funnel.quiz";
-const EMPTY_SNAPSHOT: QuizState = {};
+const EMPTY_SNAPSHOT: QuizState = {
+  currentWeightKg: null,
+  heightCm: null,
+  desiredWeightKg: null,
+};
 
-let memoryState: QuizState = {};
-let snapshot: QuizState = {};
+let memoryState: QuizState = EMPTY_SNAPSHOT;
+let snapshot: QuizState = EMPTY_SNAPSHOT;
 let hasSnapshot = false;
 const listeners = new Set<() => void>();
 
 function readStorageState(): QuizState {
   if (typeof window === "undefined") {
-    return {};
+    return EMPTY_SNAPSHOT;
   }
 
   const raw = window.localStorage.getItem(QUIZ_STORAGE_KEY);
   if (!raw) {
-    return {};
+    return EMPTY_SNAPSHOT;
   }
 
   try {
     const parsed = JSON.parse(raw) as QuizState;
-    return parsed ?? {};
+    return parsed ?? EMPTY_SNAPSHOT;
   } catch {
-    return {};
+    return EMPTY_SNAPSHOT;
   }
 }
 
@@ -66,6 +70,7 @@ function updateSnapshot(nextState: QuizState) {
 
 function getMergedState(): QuizState {
   return {
+    ...EMPTY_SNAPSHOT,
     ...readStorageState(),
     ...memoryState,
   };
@@ -98,7 +103,7 @@ export function setBodyMetrics(currentWeightKg: number, heightCm: number) {
     ...getMergedState(),
     currentWeightKg,
     heightCm,
-    desiredWeightKg: undefined,
+    desiredWeightKg: null,
     milestoneLossKg: undefined,
     milestoneWeightKg: undefined,
     paceKey: undefined,
@@ -164,9 +169,9 @@ export function setPacePlan(paceKey: PaceKey, paceKgPerWeek: number, goalDateISO
 }
 
 export function clearQuizState() {
-  memoryState = {};
+  memoryState = EMPTY_SNAPSHOT;
   clearStorageState();
-  updateSnapshot({});
+  updateSnapshot(EMPTY_SNAPSHOT);
 }
 
 export function getQuizState(): QuizState {

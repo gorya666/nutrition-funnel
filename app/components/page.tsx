@@ -11,6 +11,7 @@ import PaceCard from "@/components/PaceCard";
 import PrimaryButton from "@/components/PrimaryButton";
 import ProgressBars from "@/components/ProgressBars";
 import SelectableInfoCard from "@/components/SelectableInfoCard";
+import TimelineGraph from "@/components/TimelineGraph";
 import WeightInputCard from "@/components/WeightInputCard";
 
 export default function ComponentsPage() {
@@ -89,6 +90,43 @@ export default function ComponentsPage() {
         </section>
 
         <section className="playground-section">
+          <h2 className="title-text">Timeline graph</h2>
+          <Card>
+            <TimelineGraph
+              title="Projected progress"
+              currentWeightKg={83}
+              targetWeightKg={78}
+              weeksToGoal={7}
+            />
+          </Card>
+        </section>
+
+        <section className="playground-section">
+          <h2 className="title-text">Plan reveal</h2>
+          <Card className="playground-stack">
+            <p className="title-3-text results-macros-title">Daily recommendations</p>
+            <p className="results-calories-value">
+              1820
+              <span className="results-calories-unit">kcal</span>
+            </p>
+            <div className="results-macros-grid">
+              <div className="results-macro-item">
+                <p className="small-text subtitle-text">Carbs</p>
+                <p className="body-text results-macro-value">180 g</p>
+              </div>
+              <div className="results-macro-item">
+                <p className="small-text subtitle-text">Fats</p>
+                <p className="body-text results-macro-value">62 g</p>
+              </div>
+              <div className="results-macro-item">
+                <p className="small-text subtitle-text">Proteins</p>
+                <p className="body-text results-macro-value">126 g</p>
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        <section className="playground-section">
           <h2 className="title-text">Pace</h2>
           <Card className="playground-stack">
             <p className="small-text subtitle-text">Weight loss per week</p>
@@ -136,7 +174,7 @@ export default function ComponentsPage() {
         <section className="playground-section">
           <h2 className="title-text">Desired Weight Input</h2>
           <WeightInputCard
-            label="Target weight"
+            label="Desired weight"
             unit="kg"
             value={desiredWeightPreview}
             onChange={setDesiredWeightPreview}

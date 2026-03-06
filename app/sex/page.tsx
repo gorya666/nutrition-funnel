@@ -1,11 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
 import OptionCard from "@/components/OptionCard";
-import PrimaryButton from "@/components/PrimaryButton";
+import { setGender } from "@/store/quizStore";
 
 type SexOption = "female" | "male" | "prefer_not_to_say";
 
@@ -18,17 +18,36 @@ const OPTIONS: Array<{ value: SexOption; label: string; emoji: string }> = [
 export default function SexPage() {
   const router = useRouter();
   const [selection, setSelection] = useState<SexOption | null>(null);
+  const [isAdvancing, setIsAdvancing] = useState(false);
+  const navigationTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current !== null) {
+        window.clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleSelect = (value: SexOption) => {
+    if (isAdvancing) {
+      return;
+    }
+
+    setSelection(value);
+    setGender(value);
+    setIsAdvancing(true);
+
+    navigationTimeoutRef.current = window.setTimeout(() => {
+      router.push("/age");
+    }, 300);
+  };
 
   return (
     <OnboardingShell
       activeStep={1}
       showBack
       onBack={() => router.back()}
-      primaryAction={
-        <PrimaryButton disabled={!selection} onClick={() => router.push("/age")}>
-          Continue
-        </PrimaryButton>
-      }
     >
       <h1 className="title-text sex-title">What&apos;s your sex?</h1>
       <p className="body-text subtitle-text sex-subtitle">
@@ -43,7 +62,7 @@ export default function SexPage() {
             label={option.label}
             emoji={option.emoji}
             selected={selection === option.value}
-            onClick={() => setSelection(option.value)}
+            onClick={() => handleSelect(option.value)}
           />
         ))}
       </div>

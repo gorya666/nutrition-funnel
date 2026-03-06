@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
 import OptionCard from "@/components/OptionCard";
-import PrimaryButton from "@/components/PrimaryButton";
 import { setAgeBucket, type AgeBucket } from "@/store/quizStore";
 
 const AGE_OPTIONS: Array<{ label: string; value: AgeBucket }> = [
@@ -20,26 +19,36 @@ const AGE_OPTIONS: Array<{ label: string; value: AgeBucket }> = [
 export default function AgePage() {
   const router = useRouter();
   const [selection, setSelection] = useState<AgeBucket | null>(null);
+  const [isAdvancing, setIsAdvancing] = useState(false);
+  const navigationTimeoutRef = useRef<number | null>(null);
 
-  const handleContinue = () => {
-    if (!selection) {
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current !== null) {
+        window.clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleSelect = (value: AgeBucket) => {
+    if (isAdvancing) {
       return;
     }
 
-    setAgeBucket(selection);
-    router.push("/weight");
+    setSelection(value);
+    setAgeBucket(value);
+    setIsAdvancing(true);
+
+    navigationTimeoutRef.current = window.setTimeout(() => {
+      router.push("/weight");
+    }, 300);
   };
 
   return (
     <OnboardingShell
-      activeStep={2}
+      activeStep={1}
       showBack
       onBack={() => router.back()}
-      primaryAction={
-        <PrimaryButton disabled={!selection} onClick={handleContinue}>
-          Continue
-        </PrimaryButton>
-      }
     >
       <h1 className="display-text age-title">How old are you?</h1>
       <p className="body-text subtitle-text age-subtitle">This helps personalize your plan.</p>
@@ -50,7 +59,7 @@ export default function AgePage() {
             key={option.value}
             label={option.label}
             selected={selection === option.value}
-            onClick={() => setSelection(option.value)}
+            onClick={() => handleSelect(option.value)}
           />
         ))}
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
 import PaceCard from "@/components/PaceCard";
@@ -52,37 +52,30 @@ const PACE_CARDS: Array<{
   },
 ];
 
-function formatWeight(value: number) {
-  return Number.isInteger(value) ? `${value}` : value.toFixed(1);
-}
-
 export default function PacePage() {
   const router = useRouter();
   const quiz = useSyncExternalStore(subscribeQuizState, getQuizSnapshot, getQuizServerSnapshot);
 
-  const [pace, setPace] = useState<PaceKey | null>(quiz.paceKey ?? null);
+  const [pace, setPace] = useState<PaceKey | null>(null);
+  const [isAdvancing, setIsAdvancing] = useState(false);
+  const navigationTimeoutRef = useRef<number | null>(null);
 
   const currentWeight = quiz.currentWeightKg ?? 0;
   const desiredWeight = quiz.desiredWeightKg ?? 0;
   const totalGapKg = Math.max(currentWeight - desiredWeight, 1);
 
-  const paceKgPerWeek = pace ? PACE_KG[pace] : null;
-  const weeksToGoal = paceKgPerWeek ? Math.ceil(totalGapKg / paceKgPerWeek) : null;
-
-  const handlePaceChange = (nextPace: PaceKey) => {
-    const nextPaceKg = PACE_KG[nextPace];
-    const nextWeeks = Math.ceil(totalGapKg / nextPaceKg);
-    const nextGoalDate = new Date();
-    nextGoalDate.setDate(nextGoalDate.getDate() + nextWeeks * 7);
-
-    setPace(nextPace);
-    setPacePlan(nextPace, nextPaceKg, nextGoalDate.toISOString());
-  };
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current !== null) {
+        window.clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (!quiz.currentWeightKg || !quiz.desiredWeightKg) {
     return (
       <OnboardingShell
-        activeStep={6}
+        activeStep={3}
         showBack
         onBack={() => router.back()}
         primaryAction={<PrimaryButton onClick={() => router.push("/desired-weight")}>Go back</PrimaryButton>}
@@ -93,27 +86,30 @@ export default function PacePage() {
     );
   }
 
-  const handleContinue = () => {
-    if (!pace || !paceKgPerWeek || !weeksToGoal) {
+  const handlePaceChange = (nextPace: PaceKey) => {
+    if (isAdvancing) {
       return;
     }
 
+    const nextPaceKg = PACE_KG[nextPace];
+    const nextWeeksToGoal = Math.ceil(totalGapKg / nextPaceKg);
     const goalDate = new Date();
-    goalDate.setDate(goalDate.getDate() + weeksToGoal * 7);
-    setPacePlan(pace, paceKgPerWeek, goalDate.toISOString());
-    router.push("/processing");
+    goalDate.setDate(goalDate.getDate() + nextWeeksToGoal * 7);
+
+    setPace(nextPace);
+    setPacePlan(nextPace, nextPaceKg, goalDate.toISOString());
+    setIsAdvancing(true);
+
+    navigationTimeoutRef.current = window.setTimeout(() => {
+      router.push("/motivation");
+    }, 300);
   };
 
   return (
     <OnboardingShell
-      activeStep={6}
+      activeStep={3}
       showBack
       onBack={() => router.back()}
-      primaryAction={
-        <PrimaryButton disabled={!pace} onClick={handleContinue}>
-          Set this pace
-        </PrimaryButton>
-      }
     >
       <h1 className="display-text pace-title">How fast do you want to reach your goal?</h1>
 
@@ -132,12 +128,6 @@ export default function PacePage() {
           />
         ))}
       </div>
-
-      <p className="small-text subtitle-text pace-estimate-copy">
-        {pace && weeksToGoal
-          ? `At this pace, you'll reach ${formatWeight(desiredWeight)} kg in ~${weeksToGoal} weeks`
-          : "Select a pace to see your estimated timeline"}
-      </p>
     </OnboardingShell>
   );
 }

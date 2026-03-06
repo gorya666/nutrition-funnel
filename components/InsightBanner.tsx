@@ -42,11 +42,15 @@ export default function InsightBanner({ bmi }: InsightBannerProps) {
 
   return (
     <div className="insight-banner">
+      <div className="bmi-divider" aria-hidden="true">
+        <span className="bmi-divider-line" />
+        <span className="bmi-divider-label">Body Mass Index</span>
+        <span className="bmi-divider-line" />
+      </div>
       <div className="insight-banner-row">
         <p className="insight-bmi-main">{bmi.toFixed(1)}</p>
         <Badge variant={status.badgeVariant}>{status.label}</Badge>
       </div>
-      <p className="small-text insight-bmi-label">Body Mass Index</p>
       <p className="small-text subtitle-text insight-bmi-copy">{status.message}</p>
     </div>
   );

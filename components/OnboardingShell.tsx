@@ -9,14 +9,16 @@ type OnboardingShellProps = {
   activeStep: number;
   showBack?: boolean;
   onBack?: () => void;
+  hideProgress?: boolean;
   children: ReactNode;
-  primaryAction: ReactNode;
+  primaryAction?: ReactNode;
 };
 
 export default function OnboardingShell({
   activeStep,
   showBack = false,
   onBack,
+  hideProgress = false,
   children,
   primaryAction,
 }: OnboardingShellProps) {
@@ -31,26 +33,38 @@ export default function OnboardingShell({
     }
   };
 
-  const contentClassName = showBack
-    ? "onboarding-content onboarding-content-with-secondary"
-    : "onboarding-content onboarding-content-default";
+  const hasFooterAction = Boolean(primaryAction);
+  const contentClassName = hasFooterAction
+    ? "onboarding-content onboarding-content-default"
+    : "onboarding-content onboarding-content-no-footer";
 
   return (
     <div className="onboarding-shell">
       <header className="onboarding-header">
-        <ProgressBars activeStep={activeStep} />
+        <div className="onboarding-header-main">
+          {showBack ? (
+            <BackButton onClick={handleBack} className="onboarding-header-back" />
+          ) : (
+            <span className="onboarding-header-back-spacer" aria-hidden="true" />
+          )}
+
+          {!hideProgress ? (
+            <div className="onboarding-header-progress">
+              <ProgressBars activeStep={activeStep} />
+            </div>
+          ) : (
+            <span className="onboarding-header-progress-spacer" aria-hidden="true" />
+          )}
+        </div>
       </header>
 
       <main className={contentClassName}>{children}</main>
 
-      <footer className="onboarding-footer">
-        <div className="onboarding-footer-actions">
-          {primaryAction}
-          {showBack ? (
-            <BackButton onClick={handleBack} />
-          ) : null}
-        </div>
-      </footer>
+      {hasFooterAction ? (
+        <footer className="onboarding-footer">
+          <div className="onboarding-footer-actions">{primaryAction}</div>
+        </footer>
+      ) : null}
     </div>
   );
 }

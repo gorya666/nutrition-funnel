@@ -39,21 +39,32 @@ export default function DesiredWeightPage() {
   );
   const [desiredWeight, setDesiredWeightInput] = useState("");
 
-  const [minHealthyWeight, maxHealthyWeight] = useMemo(() => {
+  const recommendedWeightKg = useMemo(() => {
     if (!heightCm) {
-      return [40, 80];
+      return 70;
     }
 
     const heightM = heightCm / 100;
-    const min = Math.round(18.5 * heightM * heightM);
-    const max = Math.round(24.9 * heightM * heightM);
-    return [clamp(min, 40, 300), clamp(max, 40, 300)];
-  }, [heightCm]);
+    const healthyUpperWeightKg = 24.9 * heightM * heightM;
+    const healthyMidWeightKg = 21.7 * heightM * heightM;
+    const roundedUpper = Math.round(healthyUpperWeightKg);
+    const roundedMid = Math.round(healthyMidWeightKg);
+
+    let recommended =
+      currentWeightKg <= healthyUpperWeightKg
+        ? Math.max(Math.round(currentWeightKg - 3), roundedMid)
+        : Math.max(Math.round(currentWeightKg - 5), roundedUpper);
+
+    recommended = Math.min(recommended, Math.round(currentWeightKg - 1));
+    recommended = Math.max(recommended, roundedMid);
+
+    return clamp(recommended, 40, 300);
+  }, [currentWeightKg, heightCm]);
 
   if (!currentWeightKg || !heightCm) {
     return (
       <OnboardingShell
-        activeStep={4}
+        activeStep={2}
         showBack
         onBack={() => router.back()}
         primaryAction={<PrimaryButton onClick={() => router.push("/weight")}>Go back</PrimaryButton>}
@@ -69,6 +80,7 @@ export default function DesiredWeightPage() {
   const minAllowed = 40;
   const isValid = parsedDesired !== null && parsedDesired >= minAllowed && parsedDesired <= maxAllowed;
   const invalid = desiredWeight.length > 0 && !isValid;
+  const showTooHighError = parsedDesired !== null && parsedDesired >= currentWeightKg;
 
   const handleContinue = () => {
     if (!isValid || parsedDesired === null) {
@@ -76,12 +88,12 @@ export default function DesiredWeightPage() {
     }
 
     setDesiredWeight(parsedDesired);
-    router.push("/target-weight");
+    router.push("/pace");
   };
 
   return (
     <OnboardingShell
-      activeStep={4}
+      activeStep={2}
       showBack
       onBack={() => router.back()}
       primaryAction={
@@ -91,19 +103,22 @@ export default function DesiredWeightPage() {
       }
     >
       <h1 className="display-text age-title">What weight would you like to reach?</h1>
-      <p className="body-text subtitle-text age-subtitle">You can adjust this later.</p>
+      <p className="body-text subtitle-text age-subtitle">Set a realistic goal you’d feel good reaching.</p>
 
       <WeightInputCard
-        label="Target weight"
+        label="Desired weight"
         unit="kg"
         value={desiredWeight}
         onChange={setDesiredWeightInput}
         invalid={invalid}
-        helperText={invalid ? `Enter an integer between ${minAllowed} and ${maxAllowed}` : undefined}
+        helperText={showTooHighError ? "Entered weight should be lower than your current weight." : undefined}
       />
 
       <p className="small-text subtitle-text desired-weight-hint">
-        For your height, a healthy range is {minHealthyWeight}–{maxHealthyWeight} kg
+        Recommended weight: {recommendedWeightKg} kg
+      </p>
+      <p className="small-text subtitle-text desired-weight-note">
+        A realistic first goal based on your height and current weight.
       </p>
     </OnboardingShell>
   );

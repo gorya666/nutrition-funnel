@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
 import OptionCard from "@/components/OptionCard";
-import PrimaryButton from "@/components/PrimaryButton";
 import { setGender, type GenderKey } from "@/store/quizStore";
 
 const OPTIONS: Array<{ value: GenderKey; label: string }> = [
@@ -17,25 +16,36 @@ const OPTIONS: Array<{ value: GenderKey; label: string }> = [
 export default function WelcomePage() {
   const router = useRouter();
   const [selection, setSelection] = useState<GenderKey | null>(null);
+  const [isAdvancing, setIsAdvancing] = useState(false);
+  const navigationTimeoutRef = useRef<number | null>(null);
 
-  const handleContinue = () => {
-    if (!selection) {
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current !== null) {
+        window.clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleSelect = (value: GenderKey) => {
+    if (isAdvancing) {
       return;
     }
 
-    setGender(selection);
-    router.push("/age");
+    setSelection(value);
+    setGender(value);
+    setIsAdvancing(true);
+
+    navigationTimeoutRef.current = window.setTimeout(() => {
+      router.push("/age");
+    }, 300);
   };
 
   return (
     <OnboardingShell
       activeStep={0}
       showBack={false}
-      primaryAction={
-        <PrimaryButton disabled={!selection} onClick={handleContinue}>
-          Continue
-        </PrimaryButton>
-      }
+      hideProgress
     >
       <h1 className="title-text welcome-title">
         Snap your meals and <span className="welcome-title-emphasis">stay in control</span> of calories.
@@ -62,7 +72,7 @@ export default function WelcomePage() {
                   : "🙂"
             }
             selected={selection === option.value}
-            onClick={() => setSelection(option.value)}
+            onClick={() => handleSelect(option.value)}
           />
         ))}
       </div>

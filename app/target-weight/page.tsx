@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
 import Card from "@/components/Card";
-import MilestoneRail from "@/components/MilestoneRail";
 import OnboardingShell from "@/components/OnboardingShell";
 import PrimaryButton from "@/components/PrimaryButton";
+import TimelineGraph from "@/components/TimelineGraph";
 import {
   getQuizServerSnapshot,
   getQuizSnapshot,
@@ -83,7 +83,11 @@ export default function TargetWeightPage() {
         <p className="small-text subtitle-text target-support-copy">From {formatWeight(currentWeightKg)} kg</p>
         <p className="small-text subtitle-text target-range-copy">Your full goal is {formatWeight(desiredWeightKg)} kg</p>
 
-        <MilestoneRail startWeightKg={currentWeightKg} targetWeightKg={milestoneWeightKg} weeks={weeks} />
+        <TimelineGraph
+          currentWeightKg={currentWeightKg}
+          targetWeightKg={milestoneWeightKg}
+          weeksToGoal={weeks}
+        />
       </Card>
     </OnboardingShell>
   );
