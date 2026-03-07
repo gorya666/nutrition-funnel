@@ -1,4 +1,4 @@
-import SelectableInfoCard from "@/components/SelectableInfoCard";
+import SelectionCard from "@/components/SelectionCard";
 import type { PaceKey } from "@/store/quizStore";
 
 type PaceCardProps = {
@@ -23,11 +23,10 @@ export default function PaceCard({
   onSelect,
 }: PaceCardProps) {
   return (
-    <SelectableInfoCard
-      emoji={emoji}
-      title={title}
-      meta={paceLabel}
+    <SelectionCard
+      title={`${title} · ${paceLabel}`}
       subtitle={description}
+      leadingIcon={emoji}
       badgeText={recommended ? "Recommended" : undefined}
       selected={selected}
       role="radio"

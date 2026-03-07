@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-import Card from "@/components/Card";
+import GoalSummaryCards from "@/components/GoalSummaryCards";
+import NutritionRecommendationCard from "@/components/NutritionRecommendationCard";
 import OnboardingShell from "@/components/OnboardingShell";
 import PrimaryButton from "@/components/PrimaryButton";
 import TimelineGraph from "@/components/TimelineGraph";
@@ -12,15 +13,10 @@ import {
   getQuizState,
 } from "@/store/quizStore";
 
-function formatWeight(value: number) {
-  return Number.isInteger(value) ? `${value}` : value.toFixed(1);
-}
-
 function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "numeric",
-    month: "long",
-    year: "numeric",
+    month: "short",
   }).format(date);
 }
 
@@ -38,7 +34,7 @@ export default function ResultsPage() {
   };
 
   const handleContinue = () => {
-    router.push("/age");
+    router.push("/paywall");
   };
 
   const currentWeight = quiz.currentWeightKg ?? 0;
@@ -47,11 +43,12 @@ export default function ResultsPage() {
   const totalGapKg = Math.max(currentWeight - desiredWeight, 1);
   const weeksToGoal = Math.max(1, Math.ceil(totalGapKg / paceKgPerWeek));
 
-  const goalDateLabel = useMemo(() => {
+  const goalDate = useMemo(() => {
     const next = new Date();
     next.setDate(next.getDate() + weeksToGoal * 7);
-    return formatDate(next);
+    return next;
   }, [weeksToGoal]);
+  const goalDateLabel = useMemo(() => formatDate(goalDate), [goalDate]);
 
   const calories = useMemo(() => {
     const maintenanceEstimate = currentWeight * 30;
@@ -83,40 +80,30 @@ export default function ResultsPage() {
 
   return (
     <OnboardingShell activeStep={6} showBack onBack={() => router.back()} primaryAction={<PrimaryButton onClick={handleContinue}>Continue</PrimaryButton>}>
-      <h1 className="display-text age-title">Your custom plan is ready!</h1>
-      <p className="body-text subtitle-text age-subtitle">Reach {formatWeight(desiredWeight)} kg by {goalDateLabel}</p>
+      <h1 className="display-text results-title">Your custom plan is ready!</h1>
 
-      <Card className="target-progress-card">
+      <section className="results-hero-graph-wrap">
         <TimelineGraph
-          title="Projected progress"
+          mode="resultsHero"
           currentWeightKg={currentWeight}
           targetWeightKg={desiredWeight}
           weeksToGoal={weeksToGoal}
+          startDate={new Date()}
+          goalDate={goalDate}
         />
-      </Card>
+      </section>
 
-      <Card className="results-macros-card">
-        <p className="title-3-text results-macros-title">Daily recommendations</p>
-        <p className="results-calories-value">
-          {calories}
-          <span className="results-calories-unit">kcal</span>
-        </p>
+      <GoalSummaryCards
+        desiredWeightKg={Math.round(desiredWeight)}
+        goalDateLabel={goalDateLabel}
+      />
 
-        <div className="results-macros-grid">
-          <div className="results-macro-item">
-            <p className="small-text subtitle-text">Carbs</p>
-            <p className="body-text results-macro-value">{macros.carbs} g</p>
-          </div>
-          <div className="results-macro-item">
-            <p className="small-text subtitle-text">Fats</p>
-            <p className="body-text results-macro-value">{macros.fats} g</p>
-          </div>
-          <div className="results-macro-item">
-            <p className="small-text subtitle-text">Proteins</p>
-            <p className="body-text results-macro-value">{macros.protein} g</p>
-          </div>
-        </div>
-      </Card>
+      <NutritionRecommendationCard
+        calories={calories}
+        carbs={macros.carbs}
+        proteins={macros.protein}
+        fats={macros.fats}
+      />
     </OnboardingShell>
   );
 }

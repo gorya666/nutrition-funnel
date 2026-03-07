@@ -1,11 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
-import OptionCard from "@/components/OptionCard";
-import { setAgeBucket, type AgeBucket } from "@/store/quizStore";
+import SelectionCard from "@/components/SelectionCard";
+import {
+  getQuizServerSnapshot,
+  getQuizSnapshot,
+  setAgeBucket,
+  subscribeQuizState,
+  type AgeBucket,
+} from "@/store/quizStore";
 
 const AGE_OPTIONS: Array<{ label: string; value: AgeBucket }> = [
   { label: "Under 18", value: "under18" },
@@ -18,7 +24,11 @@ const AGE_OPTIONS: Array<{ label: string; value: AgeBucket }> = [
 
 export default function AgePage() {
   const router = useRouter();
-  const [selection, setSelection] = useState<AgeBucket | null>(null);
+  const { ageBucket } = useSyncExternalStore(
+    subscribeQuizState,
+    getQuizSnapshot,
+    getQuizServerSnapshot
+  );
   const [isAdvancing, setIsAdvancing] = useState(false);
   const navigationTimeoutRef = useRef<number | null>(null);
 
@@ -35,7 +45,6 @@ export default function AgePage() {
       return;
     }
 
-    setSelection(value);
     setAgeBucket(value);
     setIsAdvancing(true);
 
@@ -46,7 +55,7 @@ export default function AgePage() {
 
   return (
     <OnboardingShell
-      activeStep={1}
+      activeStep={0}
       showBack
       onBack={() => router.back()}
     >
@@ -55,10 +64,10 @@ export default function AgePage() {
 
       <div className="sex-options">
         {AGE_OPTIONS.map((option) => (
-          <OptionCard
+          <SelectionCard
             key={option.value}
-            label={option.label}
-            selected={selection === option.value}
+            title={option.label}
+            selected={ageBucket === option.value}
             onClick={() => handleSelect(option.value)}
           />
         ))}

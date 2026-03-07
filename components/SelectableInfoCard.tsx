@@ -8,6 +8,7 @@ type SelectableInfoCardProps = {
   subtitle: string;
   selected: boolean;
   badgeText?: string;
+  metaStrong?: boolean;
   onClick?: () => void;
   role?: "radio" | "button";
   ariaChecked?: boolean;
@@ -20,6 +21,7 @@ export default function SelectableInfoCard({
   subtitle,
   selected,
   badgeText,
+  metaStrong = false,
   onClick,
   role = "button",
   ariaChecked,
@@ -45,11 +47,17 @@ export default function SelectableInfoCard({
 
           <div className="selectable-info-card-copy">
             {badgeText ? (
-              <Badge variant="success" className="selectable-info-card-badge">
+              <Badge variant="success" className="selectable-info-card-badge selectable-info-card-badge-top">
                 {badgeText}
               </Badge>
             ) : null}
-            <p className="selectable-info-card-title-line">
+            <p
+              className={
+                metaStrong
+                  ? "selectable-info-card-title-line selectable-info-card-title-line-strong"
+                  : "selectable-info-card-title-line"
+              }
+            >
               <span className="selectable-info-card-title">{title}</span>
               <span className="selectable-info-card-dot" aria-hidden="true">
                 ·
@@ -60,9 +68,19 @@ export default function SelectableInfoCard({
           </div>
         </div>
 
-        <span className={selected ? "selectable-info-card-check selectable-info-card-check-visible" : "selectable-info-card-check"} aria-hidden="true">
-          <CheckIcon size={14} strokeWidth={3} />
-        </span>
+        <div className="selectable-info-card-side">
+          {badgeText && !selected ? (
+            <Badge variant="success" className="selectable-info-card-badge selectable-info-card-badge-side">
+              {badgeText}
+            </Badge>
+          ) : null}
+          <span
+            className={selected ? "selectable-info-card-check selectable-info-card-check-visible" : "selectable-info-card-check"}
+            aria-hidden="true"
+          >
+            <CheckIcon size={14} strokeWidth={3} />
+          </span>
+        </div>
       </div>
     </button>
   );

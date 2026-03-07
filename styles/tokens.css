@@ -177,8 +177,8 @@ p {
   color: #ffffff;
   cursor: pointer;
   display: inline-flex;
-  font-family: var(--font-title);
-  font-size: 18px;
+  font-family: var(--font-body);
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0;
   height: 52px;
@@ -200,8 +200,8 @@ p {
 }
 
 .primary-button:focus-visible,
-.back-button:focus-visible,
 .option-card:focus-visible,
+.selection-card:focus-visible,
 .preview-tab:focus-visible {
   outline: 2px solid #23492d;
   outline-offset: 2px;
@@ -220,34 +220,28 @@ p {
 
 .onboarding-header {
   flex-shrink: 0;
-  min-height: 60px;
-  padding: var(--space-4) var(--space-5) var(--space-3);
-}
-
-.onboarding-header-main {
-  align-items: center;
-  display: grid;
-  gap: var(--space-3);
-  grid-template-columns: 44px minmax(0, 1fr);
+  padding: var(--space-4) var(--space-5) 0;
 }
 
 .onboarding-header-progress {
   width: 100%;
 }
 
-.onboarding-header-progress-spacer {
-  display: block;
-  height: 8px;
+.onboarding-header-back-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.onboarding-header-progress-row {
+  margin-top: 0;
 }
 
 .onboarding-header-back {
   justify-self: start;
 }
 
-.onboarding-header-back-spacer {
-  display: block;
-  height: 44px;
-  width: 44px;
+.onboarding-header-back-row {
+  margin-top: var(--space-4);
 }
 
 .progress-bars {
@@ -257,9 +251,9 @@ p {
 }
 
 .progress-segment {
-  border-radius: 4px;
+  border-radius: 5px;
   flex: 1;
-  height: 8px;
+  height: 10px;
 }
 
 .progress-segment-active {
@@ -340,17 +334,22 @@ p {
 .back-button {
   align-items: center;
   background: #e2ddd3;
-  border: 1px solid #d7d0c4;
+  border: none;
   border-radius: var(--radius-button);
   color: var(--color-text);
   cursor: pointer;
   display: inline-flex;
+  font-family: var(--font-body);
   height: 44px;
   justify-content: center;
   transition: transform 120ms var(--ease-out-quart), opacity 120ms var(--ease-out-quart);
   touch-action: manipulation;
   will-change: transform;
   width: 44px;
+}
+
+.back-button:focus-visible {
+  outline: none;
 }
 
 .back-button-icon {
@@ -447,6 +446,131 @@ p {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+.selection-card {
+  align-items: center;
+  border-color: var(--color-border);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: var(--space-4);
+  text-align: left;
+  transition: transform 150ms var(--ease-out-quart), box-shadow 150ms var(--ease-out-quart), border-color 150ms var(--ease-out-quart), background-color 150ms var(--ease-out-quart);
+  touch-action: manipulation;
+  width: 100%;
+}
+
+.selection-card-left {
+  align-items: center;
+  display: flex;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.selection-card-leading {
+  align-items: center;
+  display: inline-flex;
+  font-size: 24px;
+  justify-content: center;
+  line-height: 1;
+  width: 28px;
+}
+
+.selection-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.selection-card-title {
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.selection-card-subtitle {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.selection-card-right {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  margin-left: var(--space-3);
+}
+
+.selection-card-badge {
+  width: fit-content;
+}
+
+.selection-card-badge-top {
+  margin-bottom: 8px;
+}
+
+.selection-card-badge-side {
+  display: none;
+}
+
+.selection-card-indicator {
+  align-items: center;
+  background: #e2e0df;
+  border-radius: var(--radius-pill);
+  color: #ffffff;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.selection-card-check {
+  align-items: center;
+  display: inline-flex;
+  height: 14px;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 150ms var(--ease-out-quart), transform 150ms var(--ease-out-quart);
+  width: 14px;
+}
+
+.selection-card-check-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.selection-card-selected {
+  background: #f7faf8;
+  border-color: var(--color-primary);
+}
+
+.selection-card-indicator-selected {
+  background: var(--color-primary);
+}
+
+.selection-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (min-width: 540px) {
+  .selection-card-badge-top {
+    display: none;
+  }
+
+  .selection-card-badge-side {
+    display: inline-flex;
+  }
 }
 
 .option-card {
@@ -739,6 +863,10 @@ p {
   margin-top: var(--space-2);
 }
 
+.input-support-text {
+  margin-top: var(--space-2);
+}
+
 .weight-bmi-divider {
   border-top: 1px solid var(--color-border);
   margin-top: var(--space-4);
@@ -814,6 +942,24 @@ p {
   position: relative;
 }
 
+.target-progress-hero {
+  width: 100%;
+}
+
+.target-progress-hero-results {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-2);
+}
+
+.target-progress-hero-image {
+  display: block;
+  height: auto;
+  max-width: 391px;
+  width: 100%;
+}
+
 .target-progress-graphic-compact {
   margin-top: 8px;
 }
@@ -829,7 +975,16 @@ p {
   aspect-ratio: 320 / 140;
 }
 
+.target-progress-svg-results {
+  aspect-ratio: 320 / 170;
+}
+
 .target-progress-axis {
+  stroke: #e6dfd6;
+  stroke-width: 1;
+}
+
+.target-progress-axis-results {
   stroke: #e6dfd6;
   stroke-width: 1;
 }
@@ -855,6 +1010,38 @@ p {
   fill: var(--color-card);
   stroke: #44a658;
   stroke-width: 4;
+}
+
+.target-progress-curve-results-left {
+  fill: none;
+  stroke: #4fe35a;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 17;
+}
+
+.target-progress-curve-results-right {
+  stroke: #0f3f2b;
+  stroke-linecap: round;
+  stroke-width: 17;
+}
+
+.target-progress-point-results-loss-end {
+  fill: #0f3f2b;
+}
+
+.target-progress-point-results-loss-end-inner {
+  fill: #0f3f2b;
+}
+
+.target-progress-point-results-start {
+  fill: #4fe35a;
+}
+
+.target-progress-point-results-maintenance-start {
+  fill: var(--color-card);
+  stroke: #0f3f2b;
+  stroke-width: 4.5;
 }
 
 .target-weight-chip {
@@ -900,6 +1087,47 @@ p {
 
 .target-progress-labels-compact {
   margin-top: -2px;
+}
+
+.target-progress-labels-results {
+  position: relative;
+  height: 22px;
+  margin-top: var(--space-3);
+}
+
+.target-progress-label-results-item {
+  color: var(--color-text);
+  font-size: 17px;
+  position: absolute;
+}
+
+.target-progress-label-results-item-start {
+  left: 12px;
+}
+
+.target-progress-label-results-item-middle {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.target-progress-label-results-item-end {
+  right: 8px;
+}
+
+.target-progress-labels-results-hero {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  max-width: 391px;
+  width: 100%;
+}
+
+.target-progress-label-results-item-hero {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
 }
 
 .target-main-row {
@@ -1000,12 +1228,12 @@ p {
 .selectable-info-card-main {
   align-items: center;
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   min-width: 0;
 }
 
 .selectable-info-card-emoji {
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1;
 }
 
@@ -1020,6 +1248,13 @@ p {
   display: inline-flex;
   gap: 6px;
   min-width: 0;
+}
+
+.selectable-info-card-title-line-strong .selectable-info-card-title,
+.selectable-info-card-title-line-strong .selectable-info-card-meta,
+.selectable-info-card-title-line-strong .selectable-info-card-dot {
+  color: var(--color-text);
+  font-weight: 600;
 }
 
 .selectable-info-card-title {
@@ -1048,8 +1283,23 @@ p {
 }
 
 .selectable-info-card-badge {
-  margin-bottom: 8px;
   width: fit-content;
+}
+
+.selectable-info-card-badge-top {
+  margin-bottom: 8px;
+}
+
+.selectable-info-card-badge-side {
+  display: none;
+}
+
+.selectable-info-card-side {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  margin-left: var(--space-3);
 }
 
 .selectable-info-card:focus-visible {
@@ -1081,6 +1331,16 @@ p {
 .selectable-info-card-selected {
   background: #f2f8f3;
   border-color: var(--color-primary);
+}
+
+@media (min-width: 480px) {
+  .selectable-info-card-badge-top {
+    display: none;
+  }
+
+  .selectable-info-card-badge-side {
+    display: inline-flex;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1292,6 +1552,70 @@ p {
   gap: var(--space-3);
 }
 
+.results-hero-graph-wrap {
+  margin-bottom: var(--space-5);
+}
+
+.results-daily-section {
+  margin-bottom: var(--space-6);
+}
+
+.results-daily-title {
+  margin-bottom: var(--space-3);
+}
+
+.results-goal-section {
+  margin-bottom: var(--space-5);
+}
+
+.results-goal-title {
+  margin-bottom: var(--space-2);
+}
+
+.results-goal-subtitle {
+  align-items: baseline;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.results-goal-metric-inline {
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.results-section-label {
+  margin-bottom: var(--space-2);
+  text-transform: none;
+}
+
+.results-goal-metric {
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 0.95;
+  margin-bottom: var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.results-plan-section {
+  margin-bottom: var(--space-5);
+}
+
+.results-plan-label {
+  text-transform: uppercase;
+}
+
+.results-plan-line {
+  font-size: 28px;
+  line-height: 1.15;
+}
+
 .results-macros-title {
   margin-bottom: 4px;
 }
@@ -1306,12 +1630,45 @@ p {
   font-variant-numeric: tabular-nums;
 }
 
+.results-calories-flame {
+  margin-right: 8px;
+}
+
 .results-calories-unit {
   color: var(--text-secondary);
   font-family: var(--font-body);
   font-size: 22px;
   font-weight: 500;
   margin-left: 8px;
+}
+
+.results-macro-split-bar {
+  background: #e5ddd1;
+  border-radius: var(--radius-pill);
+  display: flex;
+  height: 10px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.results-macro-split-segment {
+  display: block;
+  height: 100%;
+}
+
+.results-macro-split-carbs {
+  background: #5aa46a;
+  width: 50%;
+}
+
+.results-macro-split-fats {
+  background: #d8af57;
+  width: 25%;
+}
+
+.results-macro-split-proteins {
+  background: #0f3f2b;
+  width: 25%;
 }
 
 .results-macros-grid {
@@ -1328,6 +1685,180 @@ p {
 .results-macro-value {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+}
+
+.results-macro-explainer {
+  margin-top: var(--space-2);
+}
+
+.results-title {
+  display: block;
+  line-height: 1.12;
+  margin-bottom: var(--space-5);
+  text-wrap: wrap;
+  width: 100%;
+}
+
+.goal-summary-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: var(--space-4);
+}
+
+.goal-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  justify-content: flex-start;
+}
+
+.goal-summary-label {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.goal-summary-value {
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.nutrition-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.nutrition-card-title {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.nutrition-calories-row {
+  align-items: baseline;
+  color: var(--color-text);
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.nutrition-energy-icon {
+  display: inline-flex;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.nutrition-calories-value {
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.nutrition-calories-unit {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.nutrition-macro-bar {
+  display: flex;
+  gap: var(--space-2);
+  height: 16px;
+  width: 100%;
+}
+
+.nutrition-macro-segment {
+  border-radius: var(--radius-pill);
+  display: block;
+  min-width: 24px;
+}
+
+.nutrition-macro-carbs {
+  background: var(--color-primary);
+}
+
+.nutrition-macro-proteins {
+  background: #ef6b3a;
+}
+
+.nutrition-macro-fats {
+  background: #f0b40f;
+}
+
+.nutrition-macro-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--space-4);
+}
+
+.nutrition-macro-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.nutrition-macro-label {
+  align-items: center;
+  color: var(--text-secondary);
+  display: inline-flex;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  gap: 8px;
+  line-height: 1;
+}
+
+.nutrition-dot {
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  flex-shrink: 0;
+  height: 6px;
+  width: 6px;
+}
+
+.nutrition-dot-carbs {
+  background: var(--color-primary);
+}
+
+.nutrition-dot-proteins {
+  background: #ef6b3a;
+}
+
+.nutrition-dot-fats {
+  background: #f0b40f;
+}
+
+.nutrition-macro-value {
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.nutrition-note {
+  font-size: 16px;
+  line-height: 1.35;
 }
 
 .pace-source-link {
@@ -1391,6 +1922,8 @@ p {
 @media (prefers-reduced-motion: reduce) {
   .primary-button,
   .back-button,
+  .selection-card,
+  .selection-card-check,
   .option-card,
   .pace-card,
   .pace-card-check,
@@ -1428,6 +1961,40 @@ p {
 
 .flow-back-link:hover {
   text-decoration: underline;
+}
+
+.typography-scale-card {
+  overflow-x: auto;
+  padding: 0;
+}
+
+.typography-scale-grid {
+  column-gap: var(--space-4);
+  display: grid;
+  grid-template-columns: minmax(150px, 2fr) minmax(120px, 1fr) 72px 72px 92px 120px;
+  min-width: 680px;
+  padding: var(--space-3) var(--space-4);
+}
+
+.typography-scale-grid-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.typography-scale-grid-row {
+  align-items: center;
+  border-bottom: 1px solid #efe9e0;
+}
+
+.typography-scale-grid-row:last-child {
+  border-bottom: none;
+}
+
+.typography-scale-button-preview {
+  font-family: var(--font-title);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.2;
 }
 
 .playground-section {
