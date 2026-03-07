@@ -32,12 +32,15 @@ function clamp(value: number, min: number, max: number) {
 
 export default function DesiredWeightPage() {
   const router = useRouter();
-  const { currentWeightKg, heightCm } = useSyncExternalStore(
+  const quiz = useSyncExternalStore(
     subscribeQuizState,
     getQuizSnapshot,
     getQuizServerSnapshot
   );
-  const [desiredWeight, setDesiredWeightInput] = useState("");
+  const { currentWeightKg, heightCm, desiredWeightKg } = quiz;
+  const [desiredWeight, setDesiredWeightInput] = useState(() =>
+    typeof desiredWeightKg === "number" ? String(desiredWeightKg) : ""
+  );
   const hasCurrentWeight = typeof currentWeightKg === "number";
   const hasHeight = typeof heightCm === "number";
 
@@ -113,16 +116,15 @@ export default function DesiredWeightPage() {
         value={desiredWeight}
         onChange={setDesiredWeightInput}
         invalid={invalid}
-        helperText={showTooHighError ? "Entered weight should be lower than your current weight." : undefined}
       />
+      {showTooHighError ? (
+        <p className="small-text weight-shared-error">Entered weight should be lower than your current weight.</p>
+      ) : null}
 
       {recommendedWeightKg !== null ? (
         <>
           <p className="small-text subtitle-text desired-weight-hint">
             Recommended weight: {recommendedWeightKg} kg
-          </p>
-          <p className="small-text subtitle-text desired-weight-note">
-            A realistic first goal based on your height and current weight.
           </p>
         </>
       ) : null}

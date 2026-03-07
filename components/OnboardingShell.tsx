@@ -37,26 +37,27 @@ export default function OnboardingShell({
   const contentClassName = hasFooterAction
     ? "onboarding-content onboarding-content-default"
     : "onboarding-content onboarding-content-no-footer";
+  const hasHeader = showBack || !hideProgress;
 
   return (
     <div className="onboarding-shell">
-      <header className="onboarding-header">
-        <div className="onboarding-header-main">
-          {showBack ? (
-            <BackButton onClick={handleBack} className="onboarding-header-back" />
-          ) : (
-            <span className="onboarding-header-back-spacer" aria-hidden="true" />
-          )}
-
+      {hasHeader ? (
+        <header className="onboarding-header">
           {!hideProgress ? (
-            <div className="onboarding-header-progress">
-              <ProgressBars activeStep={activeStep} />
+            <div className="onboarding-header-progress-row">
+              <div className="onboarding-header-progress">
+                <ProgressBars activeStep={activeStep} />
+              </div>
             </div>
-          ) : (
-            <span className="onboarding-header-progress-spacer" aria-hidden="true" />
-          )}
-        </div>
-      </header>
+          ) : null}
+
+          {showBack ? (
+            <div className="onboarding-header-back-row">
+              <BackButton onClick={handleBack} className="onboarding-header-back" />
+            </div>
+          ) : null}
+        </header>
+      ) : null}
 
       <main className={contentClassName}>{children}</main>
 

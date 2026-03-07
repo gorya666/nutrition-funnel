@@ -1,11 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
-import OptionCard from "@/components/OptionCard";
-import { setGender } from "@/store/quizStore";
+import SelectionCard from "@/components/SelectionCard";
+import {
+  getQuizServerSnapshot,
+  getQuizSnapshot,
+  setGender,
+  subscribeQuizState,
+} from "@/store/quizStore";
 
 type SexOption = "female" | "male" | "prefer_not_to_say";
 
@@ -17,7 +22,11 @@ const OPTIONS: Array<{ value: SexOption; label: string; emoji: string }> = [
 
 export default function SexPage() {
   const router = useRouter();
-  const [selection, setSelection] = useState<SexOption | null>(null);
+  const { gender } = useSyncExternalStore(
+    subscribeQuizState,
+    getQuizSnapshot,
+    getQuizServerSnapshot
+  );
   const [isAdvancing, setIsAdvancing] = useState(false);
   const navigationTimeoutRef = useRef<number | null>(null);
 
@@ -34,7 +43,6 @@ export default function SexPage() {
       return;
     }
 
-    setSelection(value);
     setGender(value);
     setIsAdvancing(true);
 
@@ -57,11 +65,11 @@ export default function SexPage() {
 
       <div className="sex-options">
         {OPTIONS.map((option) => (
-          <OptionCard
+          <SelectionCard
             key={option.value}
-            label={option.label}
-            emoji={option.emoji}
-            selected={selection === option.value}
+            title={option.label}
+            leadingIcon={option.emoji}
+            selected={gender === option.value}
             onClick={() => handleSelect(option.value)}
           />
         ))}

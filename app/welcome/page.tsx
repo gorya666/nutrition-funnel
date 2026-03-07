@@ -1,11 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
-import OptionCard from "@/components/OptionCard";
-import { setGender, type GenderKey } from "@/store/quizStore";
+import SelectionCard from "@/components/SelectionCard";
+import {
+  getQuizServerSnapshot,
+  getQuizSnapshot,
+  setGender,
+  subscribeQuizState,
+  type GenderKey,
+} from "@/store/quizStore";
 
 const OPTIONS: Array<{ value: GenderKey; label: string }> = [
   { value: "male", label: "Male" },
@@ -15,7 +21,11 @@ const OPTIONS: Array<{ value: GenderKey; label: string }> = [
 
 export default function WelcomePage() {
   const router = useRouter();
-  const [selection, setSelection] = useState<GenderKey | null>(null);
+  const { gender } = useSyncExternalStore(
+    subscribeQuizState,
+    getQuizSnapshot,
+    getQuizServerSnapshot
+  );
   const [isAdvancing, setIsAdvancing] = useState(false);
   const navigationTimeoutRef = useRef<number | null>(null);
 
@@ -32,7 +42,6 @@ export default function WelcomePage() {
       return;
     }
 
-    setSelection(value);
     setGender(value);
     setIsAdvancing(true);
 
@@ -61,17 +70,17 @@ export default function WelcomePage() {
 
       <div className="sex-options welcome-gender-list">
         {OPTIONS.map((option) => (
-          <OptionCard
+          <SelectionCard
             key={option.label}
-            label={option.label}
-            emoji={
+            title={option.label}
+            leadingIcon={
               option.value === "male"
                 ? "👨"
                 : option.value === "female"
                   ? "👩"
                   : "🙂"
             }
-            selected={selection === option.value}
+            selected={gender === option.value}
             onClick={() => handleSelect(option.value)}
           />
         ))}

@@ -1,13 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
 import InsightBanner from "@/components/InsightBanner";
 import OnboardingShell from "@/components/OnboardingShell";
 import PrimaryButton from "@/components/PrimaryButton";
 import WeightInputCard from "@/components/WeightInputCard";
-import { setBodyMetrics } from "@/store/quizStore";
+import {
+  getQuizServerSnapshot,
+  getQuizSnapshot,
+  setBodyMetrics,
+  subscribeQuizState,
+} from "@/store/quizStore";
 
 function parseInRange(value: string, min: number, max: number): number | null {
   if (!value) {
@@ -28,9 +33,18 @@ function parseInRange(value: string, min: number, max: number): number | null {
 
 export default function WeightPage() {
   const router = useRouter();
+  const quiz = useSyncExternalStore(
+    subscribeQuizState,
+    getQuizSnapshot,
+    getQuizServerSnapshot
+  );
 
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState(() =>
+    typeof quiz.currentWeightKg === "number" ? String(quiz.currentWeightKg) : ""
+  );
+  const [height, setHeight] = useState(() =>
+    typeof quiz.heightCm === "number" ? String(quiz.heightCm) : ""
+  );
   const [submitted, setSubmitted] = useState(false);
 
   const validWeight = parseInRange(weight, 30, 250);

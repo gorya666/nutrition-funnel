@@ -1,8 +1,13 @@
+import Image from "next/image";
+
 type TimelineGraphProps = {
   currentWeightKg: number;
   targetWeightKg: number;
   weeksToGoal: number;
   title?: string;
+  mode?: "milestone" | "resultsHero" | "results";
+  startDate?: Date;
+  goalDate?: Date;
 };
 
 function clamp(value: number, min: number, max: number) {
@@ -14,6 +19,9 @@ export default function TimelineGraph({
   targetWeightKg,
   weeksToGoal,
   title,
+  mode = "milestone",
+  startDate = new Date(),
+  goalDate,
 }: TimelineGraphProps) {
   const startWeight = Math.round(currentWeightKg);
   const endWeight = Math.round(targetWeightKg);
@@ -38,6 +46,61 @@ export default function TimelineGraph({
 
   const startChipTop = startY - 42 - 8;
   const endChipTop = endY - 42 - 8;
+
+  if (mode === "resultsHero" || mode === "results") {
+    const goalMonthDate = goalDate ?? (() => {
+      const next = new Date(startDate);
+      next.setDate(next.getDate() + weeks * 7);
+      return next;
+    })();
+
+    const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "short" });
+    const monthDiff =
+      (goalMonthDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (goalMonthDate.getMonth() - startDate.getMonth());
+
+    const monthAtOffset = (base: Date, offset: number) => {
+      const copy = new Date(base);
+      copy.setMonth(copy.getMonth() + offset);
+      return copy;
+    };
+
+    const startLabelDate = startDate;
+    const endOffset = monthDiff <= 0 ? 2 : monthDiff;
+    const endLabelDate = monthAtOffset(startDate, endOffset);
+    let middleOffset = monthDiff <= 0 ? 1 : Math.max(1, Math.round(monthDiff / 2));
+
+    if (middleOffset >= endOffset) {
+      middleOffset = Math.max(1, endOffset - 1);
+    }
+
+    const middleLabelDate = monthAtOffset(startDate, middleOffset);
+
+    const monthLabels = [
+      monthFormatter.format(startLabelDate),
+      monthFormatter.format(middleLabelDate),
+      monthFormatter.format(endLabelDate),
+    ];
+
+    return (
+      <div className="target-progress-hero target-progress-hero-results" aria-hidden>
+        <Image
+          src="/graph.svg"
+          alt=""
+          width={391}
+          height={169}
+          className="target-progress-hero-image"
+          priority
+        />
+
+        <div className="target-progress-labels target-progress-labels-results-hero">
+          <span className="small-text target-progress-label-results-item-hero">{monthLabels[0]}</span>
+          <span className="small-text target-progress-label-results-item-hero">{monthLabels[1]}</span>
+          <span className="small-text target-progress-label-results-item-hero">{monthLabels[2]}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

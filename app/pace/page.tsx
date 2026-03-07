@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import OnboardingShell from "@/components/OnboardingShell";
-import PaceCard from "@/components/PaceCard";
 import PrimaryButton from "@/components/PrimaryButton";
+import SelectionCard from "@/components/SelectionCard";
 import {
   type PaceKey,
   getQuizServerSnapshot,
@@ -31,14 +31,14 @@ const PACE_CARDS: Array<{
   {
     key: "slow",
     title: "Slow",
-    paceLabel: "0.3 kg / week",
+    paceLabel: "0.3 kg per week",
     description: "Easier to maintain",
     emoji: "🐢",
   },
   {
     key: "optimal",
     title: "Optimal",
-    paceLabel: "0.5 kg / week",
+    paceLabel: "0.5 kg per week",
     description: "Balanced and sustainable",
     emoji: "⚖️",
     recommended: true,
@@ -46,7 +46,7 @@ const PACE_CARDS: Array<{
   {
     key: "fast",
     title: "Fast",
-    paceLabel: "0.7 kg / week",
+    paceLabel: "0.7 kg per week",
     description: "More aggressive deficit",
     emoji: "🔥",
   },
@@ -56,9 +56,10 @@ export default function PacePage() {
   const router = useRouter();
   const quiz = useSyncExternalStore(subscribeQuizState, getQuizSnapshot, getQuizServerSnapshot);
 
-  const [pace, setPace] = useState<PaceKey | null>(null);
+  const [pace, setPace] = useState<PaceKey | null>(quiz.paceKey ?? null);
   const [isAdvancing, setIsAdvancing] = useState(false);
   const navigationTimeoutRef = useRef<number | null>(null);
+  const selectedPace = pace ?? quiz.paceKey ?? null;
 
   const currentWeight = quiz.currentWeightKg ?? 0;
   const desiredWeight = quiz.desiredWeightKg ?? 0;
@@ -101,7 +102,7 @@ export default function PacePage() {
     setIsAdvancing(true);
 
     navigationTimeoutRef.current = window.setTimeout(() => {
-      router.push("/motivation");
+      router.push("/processing");
     }, 300);
   };
 
@@ -115,16 +116,16 @@ export default function PacePage() {
 
       <div className="pace-card-list" role="radiogroup" aria-label="Weight loss pace">
         {PACE_CARDS.map((item) => (
-          <PaceCard
+          <SelectionCard
             key={item.key}
-            value={item.key}
-            title={item.title}
-            paceLabel={item.paceLabel}
-            description={item.description}
-            emoji={item.emoji}
-            recommended={item.recommended}
-            selected={pace === item.key}
-            onSelect={handlePaceChange}
+            title={`${item.title} · ${item.paceLabel}`}
+            subtitle={item.description}
+            leadingIcon={item.emoji}
+            badgeText={item.recommended ? "Recommended" : undefined}
+            selected={selectedPace === item.key}
+            role="radio"
+            ariaChecked={selectedPace === item.key}
+            onClick={() => handlePaceChange(item.key)}
           />
         ))}
       </div>

@@ -6,13 +6,84 @@ import { useState } from "react";
 import BackButton from "@/components/BackButton";
 import Card from "@/components/Card";
 import GoalDateCard from "@/components/GoalDateCard";
-import OptionCard from "@/components/OptionCard";
-import PaceCard from "@/components/PaceCard";
 import PrimaryButton from "@/components/PrimaryButton";
 import ProgressBars from "@/components/ProgressBars";
-import SelectableInfoCard from "@/components/SelectableInfoCard";
+import SelectionCard from "@/components/SelectionCard";
 import TimelineGraph from "@/components/TimelineGraph";
 import WeightInputCard from "@/components/WeightInputCard";
+
+const TYPOGRAPHY_SCALE = [
+  {
+    category: "Display",
+    preview: "Display",
+    previewClassName: "display-text",
+    typeface: "Source Serif 4",
+    weight: "600",
+    size: "34px",
+    caseStyle: "Sentence",
+    letterSpacing: "0.02em",
+  },
+  {
+    category: "Title",
+    preview: "Title",
+    previewClassName: "title-text",
+    typeface: "Source Serif 4",
+    weight: "600",
+    size: "24px",
+    caseStyle: "Sentence",
+    letterSpacing: "0.02em",
+  },
+  {
+    category: "Title 3",
+    preview: "Title 3",
+    previewClassName: "title-3-text",
+    typeface: "Inter",
+    weight: "700",
+    size: "20px",
+    caseStyle: "Sentence",
+    letterSpacing: "0",
+  },
+  {
+    category: "Secondary Title",
+    preview: "Secondary",
+    previewClassName: "secondary-title-text",
+    typeface: "Source Serif 4",
+    weight: "600",
+    size: "18px",
+    caseStyle: "Sentence",
+    letterSpacing: "0",
+  },
+  {
+    category: "Body",
+    preview: "Body text",
+    previewClassName: "body-text",
+    typeface: "Inter",
+    weight: "400",
+    size: "16px",
+    caseStyle: "Sentence",
+    letterSpacing: "0",
+  },
+  {
+    category: "Small",
+    preview: "Small text",
+    previewClassName: "small-text",
+    typeface: "Inter",
+    weight: "400",
+    size: "14px",
+    caseStyle: "Sentence",
+    letterSpacing: "0",
+  },
+  {
+    category: "Button",
+    preview: "Continue",
+    previewClassName: "typography-scale-button-preview",
+    typeface: "Source Serif 4",
+    weight: "600",
+    size: "18px",
+    caseStyle: "Sentence",
+    letterSpacing: "0",
+  },
+] as const;
 
 export default function ComponentsPage() {
   const [pacePreview, setPacePreview] = useState<"slow" | "optimal" | "fast">("optimal");
@@ -27,13 +98,26 @@ export default function ComponentsPage() {
 
         <section className="playground-section">
           <h1 className="title-text">Typography</h1>
-          <Card className="playground-stack">
-            <p className="display-text">
-              <span className="title-highlight">Lose weight</span> with a personalized nutrition plan
-            </p>
-            <p className="small-text subtitle-text">Takes about 1 minute</p>
-            <p className="title-3-text">Choose your age range</p>
-            <p className="body-text">This is body copy in Inter for descriptions and helper content.</p>
+          <Card className="typography-scale-card">
+            <div className="typography-scale-grid typography-scale-grid-header small-text subtitle-text">
+              <span>Scale Category</span>
+              <span>Typeface</span>
+              <span>Weight</span>
+              <span>Size</span>
+              <span>Case</span>
+              <span>Letter spacing</span>
+            </div>
+
+            {TYPOGRAPHY_SCALE.map((row) => (
+              <div key={row.category} className="typography-scale-grid typography-scale-grid-row">
+                <span className={row.previewClassName}>{row.preview}</span>
+                <span className="small-text">{row.typeface}</span>
+                <span className="small-text">{row.weight}</span>
+                <span className="small-text">{row.size}</span>
+                <span className="small-text">{row.caseStyle}</span>
+                <span className="small-text">{row.letterSpacing}</span>
+              </div>
+            ))}
           </Card>
         </section>
 
@@ -52,30 +136,29 @@ export default function ComponentsPage() {
             <p className="body-text">Default Card surface</p>
           </Card>
           <div className="playground-stack">
-            <OptionCard label="Female" emoji="👩" selected={false} />
-            <OptionCard label="Male" emoji="👨" selected />
-            <OptionCard label="Prefer not to say" emoji="🙂" selected={false} />
+            <SelectionCard title="Female" leadingIcon="👩" selected={false} />
+            <SelectionCard title="Male" leadingIcon="👨" selected />
+            <SelectionCard title="Prefer not to say" leadingIcon="🙂" selected={false} />
           </div>
           <p className="small-text subtitle-text">Hover states are visible on pointer devices.</p>
         </section>
 
         <section className="playground-section">
-          <h2 className="title-text">Reusable selector + badge</h2>
+          <h2 className="title-text">SelectionCard variations</h2>
           <div className="playground-stack">
-            <SelectableInfoCard
-              emoji="⚖️"
-              title="Optimal"
-              meta="0.5 kg / week"
+            <SelectionCard title="Male" leadingIcon="👨" selected={false} />
+            <SelectionCard
+              title="Slow · 0.3 kg per week"
+              subtitle="Easier to maintain"
+              leadingIcon="🐢"
+              selected={false}
+            />
+            <SelectionCard
+              title="Optimal · 0.5 kg per week"
               subtitle="Balanced and sustainable"
+              leadingIcon="⚖️"
               badgeText="Recommended"
               selected
-            />
-            <SelectableInfoCard
-              emoji="🐢"
-              title="Slow"
-              meta="0.3 kg / week"
-              subtitle="Easier to maintain"
-              selected={false}
             />
           </div>
         </section>
@@ -135,33 +218,27 @@ export default function ComponentsPage() {
               <span className="pace-metric-unit">kg per week</span>
             </p>
             <div className="pace-card-list">
-              <PaceCard
-                value="slow"
-                title="Slow"
-                paceLabel="0.3 kg / week"
-                description="Easier to maintain"
-                emoji="🐢"
+              <SelectionCard
+                title="Slow · 0.3 kg per week"
+                subtitle="Easier to maintain"
+                leadingIcon="🐢"
                 selected={pacePreview === "slow"}
-                onSelect={setPacePreview}
+                onClick={() => setPacePreview("slow")}
               />
-              <PaceCard
-                value="optimal"
-                title="Optimal"
-                paceLabel="0.5 kg / week"
-                description="Balanced and sustainable"
-                emoji="⚖️"
-                recommended
+              <SelectionCard
+                title="Optimal · 0.5 kg per week"
+                subtitle="Balanced and sustainable"
+                leadingIcon="⚖️"
+                badgeText="Recommended"
                 selected={pacePreview === "optimal"}
-                onSelect={setPacePreview}
+                onClick={() => setPacePreview("optimal")}
               />
-              <PaceCard
-                value="fast"
-                title="Fast"
-                paceLabel="0.7 kg / week"
-                description="More aggressive deficit"
-                emoji="🔥"
+              <SelectionCard
+                title="Fast · 0.7 kg per week"
+                subtitle="More aggressive deficit"
+                leadingIcon="🔥"
                 selected={pacePreview === "fast"}
-                onSelect={setPacePreview}
+                onClick={() => setPacePreview("fast")}
               />
             </div>
           </Card>
@@ -172,14 +249,41 @@ export default function ComponentsPage() {
         </section>
 
         <section className="playground-section">
-          <h2 className="title-text">Desired Weight Input</h2>
-          <WeightInputCard
-            label="Desired weight"
-            unit="kg"
-            value={desiredWeightPreview}
-            onChange={setDesiredWeightPreview}
-          />
-          <p className="small-text subtitle-text">For your height, a healthy range is 60–81 kg</p>
+          <h2 className="title-text">Input variations</h2>
+          <div className="playground-stack">
+            <div>
+              <WeightInputCard
+                label="Desired weight"
+                unit="kg"
+                value=""
+                onChange={() => {}}
+              />
+              <p className="small-text subtitle-text input-support-text">Default (empty)</p>
+            </div>
+
+            <div>
+              <WeightInputCard
+                label="Desired weight"
+                unit="kg"
+                value={desiredWeightPreview}
+                onChange={setDesiredWeightPreview}
+              />
+              <p className="small-text subtitle-text input-support-text">Recommended weight: 73 kg</p>
+            </div>
+
+            <div>
+              <WeightInputCard
+                label="Desired weight"
+                unit="kg"
+                value="800"
+                onChange={() => {}}
+                invalid
+              />
+              <p className="small-text weight-shared-error input-support-text">
+                Entered weight should be lower than your current weight.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section className="playground-section">
