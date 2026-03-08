@@ -79,7 +79,8 @@ export default function WeightPage() {
 
   return (
     <OnboardingShell
-      activeStep={1}
+      activeStep={6}
+      totalSteps={11}
       showBack
       onBack={() => router.back()}
       primaryAction={

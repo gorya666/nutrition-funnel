@@ -76,7 +76,8 @@ export default function PacePage() {
   if (!quiz.currentWeightKg || !quiz.desiredWeightKg) {
     return (
       <OnboardingShell
-        activeStep={3}
+        activeStep={8}
+        totalSteps={11}
         showBack
         onBack={() => router.back()}
         primaryAction={<PrimaryButton onClick={() => router.push("/desired-weight")}>Go back</PrimaryButton>}
@@ -108,7 +109,8 @@ export default function PacePage() {
 
   return (
     <OnboardingShell
-      activeStep={3}
+      activeStep={8}
+      totalSteps={11}
       showBack
       onBack={() => router.back()}
     >

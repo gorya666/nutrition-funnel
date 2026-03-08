@@ -1,9 +1,19 @@
 export type AgeBucket = "under18" | "age18_24" | "age25_34" | "age35_44" | "age45_55" | "age55plus";
 export type PaceKey = "slow" | "optimal" | "fast";
 export type GenderKey = "male" | "female" | "prefer_not_to_say";
+export type MainGoalKey = "lose_weight" | "maintain_weight" | "gain_muscle";
+export type ActivityLevelKey = "not_active" | "lightly_active" | "moderately_active" | "very_active";
+export type DifficultyReasonKey =
+  | "busy_schedule"
+  | "lack_of_knowledge"
+  | "cravings"
+  | "lack_of_consistency";
 
 type QuizState = {
   gender?: GenderKey;
+  mainGoal: MainGoalKey | null;
+  activityLevel: ActivityLevelKey | null;
+  difficultyReason?: DifficultyReasonKey | null;
   ageBucket?: AgeBucket;
   currentWeightKg: number | null;
   heightCm: number | null;
@@ -18,6 +28,9 @@ type QuizState = {
 
 const QUIZ_STORAGE_KEY = "nutrition-funnel.quiz";
 const EMPTY_SNAPSHOT: QuizState = {
+  mainGoal: null,
+  activityLevel: null,
+  difficultyReason: null,
   currentWeightKg: null,
   heightCm: null,
   desiredWeightKg: null,
@@ -91,6 +104,28 @@ export function setGender(gender: GenderKey) {
   const nextState = {
     ...getMergedState(),
     gender,
+  };
+
+  memoryState = nextState;
+  writeStorageState(nextState);
+  updateSnapshot(nextState);
+}
+
+export function setMainGoal(mainGoal: MainGoalKey) {
+  const nextState = {
+    ...getMergedState(),
+    mainGoal,
+  };
+
+  memoryState = nextState;
+  writeStorageState(nextState);
+  updateSnapshot(nextState);
+}
+
+export function setActivityLevel(activityLevel: ActivityLevelKey) {
+  const nextState = {
+    ...getMergedState(),
+    activityLevel,
   };
 
   memoryState = nextState;

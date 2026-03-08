@@ -8,21 +8,20 @@ import SelectionCard from "@/components/SelectionCard";
 import {
   getQuizServerSnapshot,
   getQuizSnapshot,
-  setGender,
+  setMainGoal,
   subscribeQuizState,
+  type MainGoalKey,
 } from "@/store/quizStore";
 
-type SexOption = "female" | "male" | "prefer_not_to_say";
-
-const OPTIONS: Array<{ value: SexOption; label: string; emoji: string }> = [
-  { value: "female", label: "Female", emoji: "👩" },
-  { value: "male", label: "Male", emoji: "👨" },
-  { value: "prefer_not_to_say", label: "Prefer not to say", emoji: "🙂" },
+const GOAL_OPTIONS: Array<{ value: MainGoalKey; label: string; emoji: string }> = [
+  { value: "lose_weight", label: "Lose weight", emoji: "🔥" },
+  { value: "maintain_weight", label: "Maintain weight", emoji: "⚖️" },
+  { value: "gain_muscle", label: "Gain muscle", emoji: "💪" },
 ];
 
-export default function SexPage() {
+export default function GoalPage() {
   const router = useRouter();
-  const { gender } = useSyncExternalStore(
+  const { mainGoal } = useSyncExternalStore(
     subscribeQuizState,
     getQuizSnapshot,
     getQuizServerSnapshot
@@ -38,38 +37,37 @@ export default function SexPage() {
     };
   }, []);
 
-  const handleSelect = (value: SexOption) => {
+  const handleSelect = (value: MainGoalKey) => {
     if (isAdvancing) {
       return;
     }
 
-    setGender(value);
+    setMainGoal(value);
     setIsAdvancing(true);
 
     navigationTimeoutRef.current = window.setTimeout(() => {
-      router.push("/goal");
+      router.push("/support");
     }, 300);
   };
 
   return (
     <OnboardingShell
-      activeStep={1}
+      activeStep={3}
+      totalSteps={11}
       showBack
-      onBack={() => router.back()}
+      onBack={() => router.push("/welcome")}
     >
-      <h1 className="title-text sex-title">What&apos;s your sex?</h1>
-      <p className="body-text subtitle-text sex-subtitle">
-        This helps us personalize your calorie and macro targets.
-      </p>
-      <p className="title-3-text welcome-question">Select your sex</p>
+      <h1 className="display-text age-title">What&apos;s your main goal?</h1>
 
-      <div className="sex-options">
-        {OPTIONS.map((option) => (
+      <div className="sex-options" role="radiogroup" aria-label="Main goal">
+        {GOAL_OPTIONS.map((option) => (
           <SelectionCard
             key={option.value}
             title={option.label}
             leadingIcon={option.emoji}
-            selected={gender === option.value}
+            selected={mainGoal === option.value}
+            role="radio"
+            ariaChecked={mainGoal === option.value}
             onClick={() => handleSelect(option.value)}
           />
         ))}

@@ -69,7 +69,8 @@ export default function DesiredWeightPage() {
   if (!hasCurrentWeight || !hasHeight) {
     return (
       <OnboardingShell
-        activeStep={2}
+        activeStep={7}
+        totalSteps={11}
         showBack
         onBack={() => router.back()}
         primaryAction={<PrimaryButton onClick={() => router.push("/weight")}>Go back</PrimaryButton>}
@@ -98,7 +99,8 @@ export default function DesiredWeightPage() {
 
   return (
     <OnboardingShell
-      activeStep={2}
+      activeStep={7}
+      totalSteps={11}
       showBack
       onBack={() => router.back()}
       primaryAction={

@@ -6,7 +6,7 @@ description: Build crafted, consistent interfaces for product software. Use when
 # Interface Design
 
 Build interface design with craft and consistency.
-
+2
 ## Scope
 
 - Use for: Dashboards, admin panels, SaaS apps, tools, settings pages, data interfaces

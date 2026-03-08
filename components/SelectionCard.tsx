@@ -4,13 +4,16 @@ import Badge from "@/components/Badge";
 import CheckIcon from "@/components/CheckIcon";
 
 type SelectionCardProps = {
-  title: string;
+  title: ReactNode;
   selected: boolean;
   onClick?: () => void;
-  subtitle?: string;
+  subtitle?: ReactNode;
   badgeText?: string;
   leadingIcon?: ReactNode;
+  showTrailingControl?: boolean;
   trailingControl?: boolean;
+  variant?: "default" | "no-trailing-control";
+  rightContent?: ReactNode;
   disabled?: boolean;
   className?: string;
   role?: "radio" | "button";
@@ -24,12 +27,18 @@ export default function SelectionCard({
   subtitle,
   badgeText,
   leadingIcon,
+  showTrailingControl,
   trailingControl = true,
+  variant = "default",
+  rightContent,
   disabled = false,
   className,
   role = "button",
   ariaChecked,
 }: SelectionCardProps) {
+  const shouldShowTrailingControl =
+    showTrailingControl ?? (variant === "no-trailing-control" ? false : trailingControl);
+
   const classes = [
     "card",
     "selection-card",
@@ -69,7 +78,11 @@ export default function SelectionCard({
         </span>
       </span>
 
-      {trailingControl ? (
+      {rightContent ? (
+        <span className="selection-card-right">{rightContent}</span>
+      ) : null}
+
+      {shouldShowTrailingControl ? (
         <span className="selection-card-right">
           <span className={selected ? "selection-card-indicator selection-card-indicator-selected" : "selection-card-indicator"} aria-hidden="true">
             <span className={selected ? "selection-card-check selection-card-check-visible" : "selection-card-check"}>

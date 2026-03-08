@@ -46,7 +46,7 @@ export default function WelcomePage() {
     setIsAdvancing(true);
 
     navigationTimeoutRef.current = window.setTimeout(() => {
-      router.push("/age");
+      router.push("/goal");
     }, 300);
   };
 

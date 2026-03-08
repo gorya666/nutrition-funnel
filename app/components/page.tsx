@@ -131,7 +131,7 @@ export default function ComponentsPage() {
         </section>
 
         <section className="playground-section">
-          <h2 className="title-text">Cards</h2>
+          <h2 className="title-text">Selection cards</h2>
           <Card className="playground-stack">
             <p className="body-text">Default Card surface</p>
           </Card>
@@ -139,14 +139,6 @@ export default function ComponentsPage() {
             <SelectionCard title="Female" leadingIcon="👩" selected={false} />
             <SelectionCard title="Male" leadingIcon="👨" selected />
             <SelectionCard title="Prefer not to say" leadingIcon="🙂" selected={false} />
-          </div>
-          <p className="small-text subtitle-text">Hover states are visible on pointer devices.</p>
-        </section>
-
-        <section className="playground-section">
-          <h2 className="title-text">SelectionCard variations</h2>
-          <div className="playground-stack">
-            <SelectionCard title="Male" leadingIcon="👨" selected={false} />
             <SelectionCard
               title="Slow · 0.3 kg per week"
               subtitle="Easier to maintain"
@@ -160,6 +152,26 @@ export default function ComponentsPage() {
               badgeText="Recommended"
               selected
             />
+          </div>
+          <p className="small-text subtitle-text">Hover states are visible on pointer devices.</p>
+        </section>
+
+        <section className="playground-section">
+          <h2 className="title-text">Main goal step</h2>
+          <div className="playground-stack">
+            <SelectionCard title="Lose weight" selected />
+            <SelectionCard title="Maintain weight" selected={false} />
+            <SelectionCard title="Gain muscle" selected={false} />
+          </div>
+        </section>
+
+        <section className="playground-section">
+          <h2 className="title-text">Activity level step</h2>
+          <div className="playground-stack">
+            <SelectionCard title="Not very active" leadingIcon="🛋️" selected={false} />
+            <SelectionCard title="Lightly active" leadingIcon="🚶" selected />
+            <SelectionCard title="Moderately active" leadingIcon="🏃" selected={false} />
+            <SelectionCard title="Very active" leadingIcon="🔥" selected={false} />
           </div>
         </section>
 

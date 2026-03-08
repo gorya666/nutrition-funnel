@@ -3,10 +3,12 @@
 import { ReactNode } from "react";
 
 import BackButton from "@/components/BackButton";
+import BottomActionBar from "@/components/BottomActionBar";
 import ProgressBars from "@/components/ProgressBars";
 
 type OnboardingShellProps = {
   activeStep: number;
+  totalSteps?: number;
   showBack?: boolean;
   onBack?: () => void;
   hideProgress?: boolean;
@@ -16,6 +18,7 @@ type OnboardingShellProps = {
 
 export default function OnboardingShell({
   activeStep,
+  totalSteps,
   showBack = false,
   onBack,
   hideProgress = false,
@@ -46,7 +49,7 @@ export default function OnboardingShell({
           {!hideProgress ? (
             <div className="onboarding-header-progress-row">
               <div className="onboarding-header-progress">
-                <ProgressBars activeStep={activeStep} />
+                <ProgressBars activeStep={activeStep} totalSteps={totalSteps} />
               </div>
             </div>
           ) : null}
@@ -62,9 +65,9 @@ export default function OnboardingShell({
       <main className={contentClassName}>{children}</main>
 
       {hasFooterAction ? (
-        <footer className="onboarding-footer">
+        <BottomActionBar>
           <div className="onboarding-footer-actions">{primaryAction}</div>
-        </footer>
+        </BottomActionBar>
       ) : null}
     </div>
   );

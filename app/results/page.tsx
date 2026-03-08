@@ -67,7 +67,8 @@ export default function ResultsPage() {
   if (!quiz.currentWeightKg || !quiz.desiredWeightKg) {
     return (
       <OnboardingShell
-        activeStep={6}
+        activeStep={10}
+        totalSteps={11}
         showBack
         onBack={() => router.back()}
         primaryAction={<PrimaryButton onClick={handleStartOver}>Start from beginning</PrimaryButton>}
@@ -79,7 +80,7 @@ export default function ResultsPage() {
   }
 
   return (
-    <OnboardingShell activeStep={6} showBack onBack={() => router.back()} primaryAction={<PrimaryButton onClick={handleContinue}>Continue</PrimaryButton>}>
+    <OnboardingShell activeStep={10} totalSteps={11} showBack onBack={() => router.back()} primaryAction={<PrimaryButton onClick={handleContinue}>Continue</PrimaryButton>}>
       <h1 className="display-text results-title">Your custom plan is ready!</h1>
 
       <section className="results-hero-graph-wrap">

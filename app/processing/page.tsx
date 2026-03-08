@@ -58,7 +58,7 @@ export default function ProcessingPage() {
   const activeIndex = done ? -1 : Math.min(completedCount, stepCount - 1);
 
   return (
-    <OnboardingShell activeStep={5} showBack onBack={() => router.back()}>
+    <OnboardingShell activeStep={9} totalSteps={11} showBack onBack={() => router.back()}>
       <h1 className="title-text processing-title">Personalizing your plan</h1>
 
       <div className="processing-track" role="progressbar" aria-label="Personalizing plan progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>

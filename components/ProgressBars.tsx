@@ -3,7 +3,7 @@ type ProgressBarsProps = {
   activeStep: number;
 };
 
-export default function ProgressBars({ totalSteps = 10, activeStep }: ProgressBarsProps) {
+export default function ProgressBars({ totalSteps = 11, activeStep }: ProgressBarsProps) {
   return (
     <div className="progress-bars" aria-label="Onboarding progress" role="progressbar" aria-valuemin={0} aria-valuemax={totalSteps} aria-valuenow={Math.min(activeStep + 1, totalSteps)}>
       {Array.from({ length: totalSteps }, (_, index) => {

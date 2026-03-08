@@ -10,10 +10,8 @@
   border-radius: var(--radius-button);
 }
 
-.option-card-indicator,
 .selection-card-indicator,
 .components-chrome-button,
-.pace-card-check,
 .goal-date-icon,
 .spacing-bar {
   border-radius: var(--radius-pill);
