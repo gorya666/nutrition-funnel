@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import CheckIcon from "@/components/CheckIcon";
 import OnboardingShell from "@/components/OnboardingShell";
+import ProcessingStepCard from "@/components/ProcessingStepCard";
 
 const STEPS = [
   "Processing your responses",
@@ -65,36 +65,18 @@ export default function ProcessingPage() {
         <span className="processing-fill" style={{ width: `${percent}%` }} />
       </div>
 
-      <div className="processing-cards" aria-live="polite">
+      <div className="processing-steps" aria-live="polite">
         {STEPS.map((step, index) => {
           const completed = index < completedCount;
           const active = index === activeIndex;
-          const cardClassName = completed
-            ? "processing-step-card processing-step-card-complete"
-            : active
-              ? "processing-step-card processing-step-card-active"
-              : "processing-step-card";
-          const textClassName = completed
-            ? "processing-step-card-text processing-step-card-text-complete"
-            : active
-              ? "processing-step-card-text processing-step-card-text-active"
-              : "processing-step-card-text";
-          const statusClassName = completed
-            ? "processing-status processing-status-complete"
-            : active
-              ? "processing-status processing-status-active"
-              : "processing-status processing-status-upcoming";
+          const state = completed ? "completed" : active ? "current" : "upcoming";
 
           return (
-            <div key={step} className={cardClassName}>
-              <p className={textClassName}>{step}</p>
-              <span className={statusClassName} aria-hidden="true">
-                <span className={active ? "processing-status-pulse processing-status-pulse-visible" : "processing-status-pulse"} />
-                <span className={completed ? "processing-status-check processing-status-check-visible" : "processing-status-check"}>
-                  <CheckIcon size={16} strokeWidth={3} className="processing-step-icon" />
-                </span>
-              </span>
-            </div>
+            <ProcessingStepCard
+              key={step}
+              label={step}
+              state={state}
+            />
           );
         })}
       </div>

@@ -1228,109 +1228,64 @@ p {
   transition: width 160ms linear;
 }
 
-.processing-cards {
+.processing-steps {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-.processing-step-card {
+.processing-step-row {
   align-items: center;
-  background: #e9e4dc;
-  border: 1px solid #d7cfc4;
-  border-radius: var(--radius-card);
   display: flex;
   justify-content: space-between;
-  min-height: 64px;
-  padding: var(--space-4);
-  transition: background-color 200ms var(--ease-out-quart), border-color 200ms var(--ease-out-quart);
+  min-height: 44px;
+  transition: color 200ms var(--ease-out-quart);
 }
 
-.processing-step-card-active {
-  background: var(--color-card);
-  border-color: #cdc5ba;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-}
-
-.processing-step-card-complete {
-  background: var(--color-card);
-  border-color: #ddd5ca;
-}
-
-.processing-step-card-text {
+.processing-step-text {
   color: var(--text-secondary);
   font-family: var(--font-body);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
   transition: color 200ms var(--ease-out-quart);
 }
 
-.processing-step-card-text-active {
+.processing-step-text-active {
   color: var(--color-text);
+  font-weight: 600;
 }
 
-.processing-step-card-text-complete {
-  color: var(--text-secondary);
+.processing-step-text-complete {
+  color: var(--color-text);
   font-weight: 500;
 }
 
 .processing-status {
   align-items: center;
+  background: transparent;
+  border: 2px solid #d5d0c8;
   border-radius: var(--radius-pill);
   display: inline-flex;
   flex-shrink: 0;
-  height: 36px;
+  height: 28px;
   justify-content: center;
-  position: relative;
-  width: 36px;
-  transition: background-color 200ms var(--ease-out-quart);
+  width: 28px;
+  transition: background-color 200ms var(--ease-out-quart), border-color 200ms var(--ease-out-quart);
 }
 
 .processing-status-upcoming {
-  background: #d5d0c8;
+  border-color: #d5d0c8;
 }
 
 .processing-status-active {
-  background: rgba(47, 94, 59, 0.14);
+  border-color: #d5d0c8;
 }
 
 .processing-status-complete {
   background: var(--color-primary);
+  border-color: var(--color-primary);
   color: #ffffff;
-}
-
-.processing-status-pulse {
-  background: var(--color-primary);
-  border-radius: var(--radius-pill);
-  height: 10px;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 200ms var(--ease-out-quart), transform 200ms var(--ease-out-quart);
-  width: 10px;
-}
-
-.processing-status-pulse-visible {
-  animation: processing-pulse 900ms ease-in-out infinite;
-  opacity: 0.9;
-  transform: scale(1);
-}
-
-.processing-status-check {
-  align-items: center;
-  color: #ffffff;
-  display: inline-flex;
-  inset: 0;
-  justify-content: center;
-  opacity: 0;
-  position: absolute;
-  transform: scale(0.85);
-  transition: opacity 200ms var(--ease-out-quart), transform 200ms var(--ease-out-quart);
-}
-
-.processing-status-check-visible {
-  opacity: 1;
-  transform: scale(1);
 }
 
 .processing-step-icon {
@@ -2048,31 +2003,6 @@ p {
   line-height: 1.25;
 }
 
-.review-card-verified {
-  align-items: center;
-  border: 1px solid #231f1c;
-  border-radius: 999px;
-  display: inline-flex;
-  height: 16px;
-  justify-content: center;
-  margin-left: 8px;
-  width: 16px;
-}
-
-.review-card-verified svg {
-  display: block;
-  height: 10px;
-  width: 10px;
-}
-
-.review-card-verified path {
-  fill: none;
-  stroke: #231f1c;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
 .review-card-date {
   flex-shrink: 0;
 }
@@ -2118,31 +2048,12 @@ p {
   }
 }
 
-@keyframes processing-pulse {
-  0% {
-    opacity: 0.45;
-    transform: scale(0.9);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  100% {
-    opacity: 0.45;
-    transform: scale(0.9);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .primary-button,
   .back-button,
   .selection-card,
   .selection-card-check,
   .processing-fill,
-  .processing-status-pulse,
-  .processing-status-check,
   .insight-banner,
   .onboarding-content > *,
   .components-chrome-button {

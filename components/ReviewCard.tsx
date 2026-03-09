@@ -31,11 +31,6 @@ export default function ReviewCard({ body, name, date, avatarText }: ReviewCardP
             {initials || "U"}
           </span>
           <span className="review-card-name">{name}</span>
-          <span className="review-card-verified" aria-label="Verified user">
-            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              <path d="M4 8.5 6.7 11 12 5.5" />
-            </svg>
-          </span>
         </div>
         <span className="small-text subtitle-text review-card-date">{date}</span>
       </div>
