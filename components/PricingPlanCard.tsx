@@ -32,27 +32,25 @@ export default function PricingPlanCard({
       onClick={onClick}
       variant="no-trailing-control"
       className="selection-card-pricing"
-      title={(
-        <span className="paywall-pricing-title-row">
-          <span className="paywall-pricing-title">{title}</span>
+      title={<span className="paywall-pricing-title">{title}</span>}
+      subtitle={(
+        <span className="paywall-pricing-details">
           {badge ? (
-            <Badge variant="success">
+            <Badge variant="warning" className="paywall-pricing-badge">
               {badge}
             </Badge>
           ) : null}
-        </span>
-      )}
-      subtitle={(
-        <span className="paywall-pricing-full-line">
-          {oldPrice ? (
-            <>
-              <span className="paywall-pricing-old">{oldPrice}</span>
-              <span className="paywall-pricing-separator"> · </span>
-              <span className="paywall-pricing-current">{currentWithBilling}</span>
-            </>
-          ) : (
-            <span className="paywall-pricing-current">{fullWithBilling}</span>
-          )}
+          <span className="paywall-pricing-full-line">
+            {oldPrice ? (
+              <>
+                <span className="paywall-pricing-old">{oldPrice}</span>
+                <span className="paywall-pricing-separator"> · </span>
+                <span className="paywall-pricing-current">{currentWithBilling}</span>
+              </>
+            ) : (
+              <span className="paywall-pricing-current">{fullWithBilling}</span>
+            )}
+          </span>
         </span>
       )}
       rightContent={(

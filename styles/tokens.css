@@ -1739,6 +1739,12 @@ p {
   gap: 8px;
 }
 
+.paywall-pricing-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .paywall-pricing-title {
   color: #000000;
   font-family: var(--font-title);
@@ -1749,29 +1755,27 @@ p {
 }
 
 .paywall-pricing-badge {
-  background: #ead39c !important;
-  border-radius: 10px;
-  color: #6a4e00 !important;
+  align-self: flex-start;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   line-height: 1;
-  padding: 5px 10px;
+  padding: 6px 10px;
 }
 
 .paywall-pricing-full-line {
   align-items: baseline;
   color: #000000;
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0;
-  margin-top: 8px;
+  white-space: nowrap;
 }
 
 .paywall-pricing-old {
   color: #000000;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
   margin-right: 8px;
@@ -1781,7 +1785,7 @@ p {
 .paywall-pricing-current {
   color: #000000;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
 }
@@ -1798,7 +1802,7 @@ p {
 .paywall-pricing-separator {
   color: #000000;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
 }
